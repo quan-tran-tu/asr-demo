@@ -1,0 +1,189 @@
+<!-- index.html -->
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>streaming</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#fff9db', 100: '#ffecb3', 200: '#ffe082',
+                            300: '#ffd54f', 400: '#ffca28', 500: '#ffc107',
+                            600: '#ffb300', 700: '#ffa000', 800: '#ff8f00',
+                            900: '#ff6f00'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <header class="gradient-bg text-white shadow-lg">
+            <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <i class="fas fa-microphone-alt text-3xl wave-animation"></i>
+                        <div class="absolute -inset-1 bg-primary-400 rounded-full opacity-75 blur glow-effect"></div>
+                    </div>
+                    <h1 class="text-2xl font-bold">AI Meeting Summarize</h1>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="text-white hover:text-gray-200 transition"><i class="fas fa-cog text-xl"></i></button>
+                    <button class="text-white hover:text-gray-200 transition"><i class="fas fa-question-circle text-xl"></i></button>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1 bg-white rounded-xl shadow-md p-6 hover-glow transition-all duration-300">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center"><i class="fas fa-sliders-h text-primary-500 mr-2"></i>Cài đặt & Điều khiển</h2>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center"><i class="fas fa-headphones text-primary-500 mr-2"></i>Nguồn âm thanh</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="microphoneBtn" class="bg-primary-50 text-primary-700 py-2 px-4 rounded-lg font-medium flex items-center justify-center hover:bg-primary-100 transition"><i class="fas fa-microphone mr-2"></i>Micro</button>
+                            <button id="audioFileBtn" class="bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium flex items-center justify-center hover:bg-gray-200 transition"><i class="fas fa-file-audio mr-2"></i>Tệp âm thanh</button>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center"><i class="fas fa-cogs text-primary-500 mr-2"></i>Tùy chọn xử lý</label>
+                        <div class="space-y-3">
+                            <label class="flex items-center space-x-3"><input type="checkbox" checked class="rounded text-primary-600 focus:ring-primary-500" id="noiseFilter"><span>Lọc nhiễu âm thanh</span></label>
+                            <label class="flex items-center space-x-3"><input type="checkbox" checked class="rounded text-primary-600 focus:ring-primary-500" id="speakerDetection"><span>Phân biệt người nói</span></label>
+                            <label class="flex items-center space-x-3"><input type="checkbox" class="rounded text-primary-600 focus:ring-primary-500" id="spellCheck"><span>Sửa lỗi chính tả</span></label>
+                            <label class="flex items-center space-x-3"><input type="checkbox" class="rounded text-primary-600 focus:ring-primary-500" id="autoSummary"><span>Tự động tóm tắt</span></label>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center"><i class="fas fa-language text-primary-500 mr-2"></i>Ngôn ngữ</label>
+                        <select id="languageSelect" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-primary-500 focus:border-primary-500">
+                            <option value="vi">Tiếng Việt</option>
+                            <option value="en">Tiếng Anh</option>
+                            <option value="zh">Tiếng Trung</option>
+                            <option value="fr">Tiếng Pháp</option>
+                        </select>
+                    </div>
+
+                    <button id="startBtn" class="w-full gradient-bg text-white py-3 rounded-lg font-bold text-lg flex items-center justify-center hover:opacity-90 transition hover-glow"><i class="fas fa-play mr-3"></i>Bắt đầu ghi âm</button>
+
+                    <div class="mt-6 p-4 bg-gray-50 rounded-lg flex items-center space-x-3" id="statusWrapper">
+                        <div class="w-3 h-3 rounded-full bg-gray-400 pulse-animation" id="statusIndicator"></div>
+                        <span class="text-sm font-medium" id="statusText">Sẵn sàng</span>
+                    </div>
+
+                    <div id="audioPreviewArea" class="space-y-2 mt-4 w-full"></div>
+                </div>
+
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white rounded-xl shadow-md p-6 hover-glow transition-all duration-300">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-semibold text-gray-800 flex items-center"><i class="fas fa-comment-dots text-primary-500 mr-2"></i>Bản ghi thời gian thực</h2>
+                            <div class="flex space-x-2">
+                                <button id="copyTranscription" class="bg-gray-100 text-gray-700 p-2 rounded-lg hover:bg-gray-200 transition"><i class="fas fa-copy"></i></button>
+                                <button id="downloadTranscription" class="bg-gray-100 text-gray-700 p-2 rounded-lg hover:bg-gray-200 transition"><i class="fas fa-download"></i></button>
+                                <button id="clearTranscription" class="bg-gray-100 text-gray-700 p-2 rounded-lg hover:bg-gray-200 transition"><i class="fas fa-eraser"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="transcription-container bg-gray-50 p-4 rounded-lg mb-4" id="realtimeTranscription">
+                            <div class="text-center text-gray-500 py-10" id="emptyState">
+                                <i class="fas fa-microphone-alt text-4xl mb-3 text-gray-300"></i>
+                                <p>Bấm "Bắt đầu ghi âm" để bắt đầu chuyển giọng nói thành văn bản</p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <div class="text-sm text-gray-500"><span id="wordCount">0</span> từ | <span id="timeElapsed">00:00:00</span></div>
+                            <button id="optimizeText" class="text-primary-600 font-medium hover:text-primary-800 transition flex items-center"><i class="fas fa-magic mr-2"></i>Tối ưu văn bản</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-md p-6 hover-glow transition-all duration-300">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-semibold text-gray-800 flex items-center"><i class="fas fa-file-alt text-primary-500 mr-2"></i>Bản tóm tắt</h2>
+                            <div class="flex space-x-2">
+                                <button id="regenerateSummary" class="bg-primary-100 text-primary-700 p-2 rounded-lg hover:bg-primary-200 transition flex items-center"><i class="fas fa-sync-alt mr-2"></i>Tạo lại</button>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-1 mb-2 p-2 bg-gray-50 rounded-lg border border-gray-200">
+                            <!-- toolbar buttons (icons only) -->
+                            <button class="toolbar-btn" data-command="bold"><i class="fas fa-bold"></i></button>
+                            <button class="toolbar-btn" data-command="italic"><i class="fas fa-italic"></i></button>
+                            <button class="toolbar-btn" data-command="underline"><i class="fas fa-underline"></i></button>
+                            <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                            <button class="toolbar-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                            <button class="toolbar-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                            <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                            <button class="toolbar-btn" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                            <button class="toolbar-btn" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                            <button class="toolbar-btn" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                            <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                            <select id="fontFamily" class="text-xs border border-gray-300 rounded px-2 py-1 h-8">
+                                <option value="Arial">Arial</option><option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option><option value="Georgia">Georgia</option>
+                                <option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option>
+                            </select>
+                            <select id="fontSize" class="text-xs border border-gray-300 rounded px-2 py-1 h-8">
+                                <option value="1">8pt</option><option value="2">10pt</option><option value="3" selected>12pt</option>
+                                <option value="4">14pt</option><option value="5">18pt</option><option value="6">24pt</option><option value="7">36pt</option>
+                            </select>
+                            <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                            <button class="toolbar-btn" id="textColorBtn"><i class="fas fa-font"></i></button><input type="color" id="textColorPicker" class="absolute opacity-0 w-0 h-0">
+                            <button class="toolbar-btn" id="highlightColorBtn"><i class="fas fa-highlighter"></i></button><input type="color" id="highlightColorPicker" class="absolute opacity-0 w-0 h-0">
+                        </div>
+
+                        <div id="summaryEditor" class="bg-gray-50 rounded-lg" contenteditable="true">Sau khi hoàn tất bản ghi, hệ thống sẽ tự động tạo bản tóm tắt nội dung chính.</div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-md p-6 hover-glow transition-all duration-300">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center"><i class="fas fa-users text-primary-500 mr-2"></i>Nhận diện người nói</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="speakerList">
+                            <div class="bg-gray-50 p-4 rounded-lg flex items-center space-x-3 hover:bg-gray-100 transition">
+                                <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600"><i class="fas fa-user"></i></div>
+                                <div><p class="font-medium">Người nói 1</p><p class="text-sm text-gray-500">0% thời lượng</p></div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg flex items-center space-x-3 hover:bg-gray-100 transition">
+                                <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600"><i class="fas fa-user"></i></div>
+                                <div><p class="font-medium">Người nói 2</p><p class="text-sm text-gray-500">0% thời lượng</p></div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg flex items-center space-x-3 hover:bg-gray-100 transition">
+                                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600"><i class="fas fa-user"></i></div>
+                                <div><p class="font-medium">Người nói 3</p><p class="text-sm text-gray-500">0% thời lượng</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-gray-800 text-white py-6">
+            <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">Voice</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-primary-300 transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-primary-300 transition"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-primary-300 transition"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-primary-300 transition"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.14.0/dist/ort.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ricky0123/vad-web@0.0.22/dist/bundle.min.js" defer></script> -->
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

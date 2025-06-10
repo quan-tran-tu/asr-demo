@@ -1,0 +1,6 @@
+vi_lm_4grams.bin
+vi_dictionary.txt
+post_processing-0.1.0.zip
+chunkformer-large-vie/
+**/__pycache__/
+recordings/

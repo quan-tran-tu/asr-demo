@@ -1,0 +1,92 @@
+/* Gradient nền cho header */
+.gradient-bg {
+    background: linear-gradient(135deg, #ffc107, #ff9800);
+}
+
+/* Hiệu ứng sóng cho biểu tượng micro */
+.wave-animation {
+    animation: wave 2s ease-in-out infinite;
+}
+@keyframes wave {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Hiệu ứng nhấp nháy cho chỉ báo trạng thái */
+.pulse-animation {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Container cho bản ghi thời gian thực */
+.transcription-container {
+    height: 300px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ff9800 #f0f0f0;
+}
+.transcription-container::-webkit-scrollbar {
+    width: 6px;
+}
+.transcription-container::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+.transcription-container::-webkit-scrollbar-thumb {
+    background-color: #ff9800;
+    border-radius: 20px;
+}
+
+/* Định dạng cho các người nói khác nhau */
+.speaker-1 {
+    border-left: 4px solid #ffc107;
+}
+.speaker-2 {
+    border-left: 4px solid #ff9800;
+}
+.speaker-3 {
+    border-left: 4px solid #ff5722;
+}
+
+/* Hiệu ứng phát sáng */
+.glow-effect {
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+}
+.hover-glow:hover {
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.7);
+}
+
+/* Định dạng trình soạn thảo tóm tắt */
+#summaryEditor {
+    min-height: 150px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    outline: none;
+}
+#summaryEditor:focus {
+    border-color: #ffc107;
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3);
+}
+
+/* Định dạng nút trên thanh công cụ */
+.toolbar-btn {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #4b5563;
+}
+.toolbar-btn:hover {
+    background-color: #f3f4f6;
+    color: #1f2937;
+}
+.toolbar-btn.active {
+    background-color: #ffecb3;
+    color: #d97706;
+}
