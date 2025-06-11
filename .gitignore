@@ -4,3 +4,4 @@ post_processing-0.1.0.zip
 chunkformer-large-vie/
 **/__pycache__/
 recordings/
+.env

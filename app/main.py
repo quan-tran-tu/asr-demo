@@ -4,6 +4,8 @@ import json
 import os
 from datetime import datetime
 
+from dotenv import load_dotenv
+
 import numpy as np
 import torch
 import torchaudio
@@ -30,10 +32,14 @@ from enum import Enum
 from .chunkformer_asr import endless_decode, init
 from .utils import correct_vietnamese_text, correct_vietnamese_text_gemini
 
-# load once (HF token via env var `HF_TOKEN` if model is gated)
+load_dotenv()
+
+hf_token = os.getenv("HF_TOKEN")
+gemini_api_key = os.getenv("GEMINI_API_KEY")
+
 try:
     diar_pipeline = Pipeline.from_pretrained(
-        "pyannote/speaker-diarization-3.1", use_auth_token="HF_TOKEN"
+        "pyannote/speaker-diarization-3.1", use_auth_token=hf_token
     )
 except Exception as e:
     print("⚠️  Pyannote initialisation failed:", e)
@@ -211,7 +217,7 @@ async def transcribe_audio(
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
 
-genai.configure(api_key="GENAI_API_KEY")
+genai.configure(api_key=gemini_api_key)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 class Lang(str, Enum):

@@ -1,11 +1,18 @@
+import os
+
 from openai import OpenAI
 from google import genai
 from google.genai import types
 
-gemini_client = genai.Client(api_key="GENAI_API_KEY")
+from dotenv import load_dotenv
+load_dotenv()
 
-# Initialize OpenAI client
-openai_client = OpenAI(api_key="OPENAI_API_KEY")
+openai_api_key = os.getenv("OPENAI_API_KEY")
+gemini_api_key = os.getenv("GEMINI_API_KEY")
+
+gemini_client = genai.Client(api_key=gemini_api_key)
+
+openai_client = OpenAI(api_key=openai_api_key)
 
 def correct_vietnamese_text(text: str) -> str:
     response = openai_client.responses.create(
